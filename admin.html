@@ -38,7 +38,7 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Category</label>
-                    <select id="category" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2" required>
+                    <select id="category" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
                         <option value="world">World</option>
                         <option value="politics">Politics</option>
                         <option value="economy">Economy</option>
@@ -50,7 +50,7 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Story Placement</label>
-                    <select id="prominence" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2" required>
+                    <select id="prominence" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
                         <option value="main">Main Feature Story</option>
                         <option value="secondary">Secondary Feature Story</option>
                         <option value="grid">Regular Grid Story</option>
@@ -58,18 +58,49 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Preview Text</label>
-                    <textarea id="preview" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2" rows="2" required></textarea>
+                    <textarea id="preview" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2" rows="2"></textarea>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Content</label>
+                    <label class="block text-sm font-medium text-gray-700">Content (Use {image:URL} to embed images)</label>
                     <textarea id="content" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2" rows="6" required></textarea>
+                    <div class="mt-2">
+                        <button type="button" id="insertImageBtn" class="text-sm bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+                            Insert Image
+                        </button>
+                        <span class="ml-4 text-sm text-gray-600">Word count: <span id="wordCount">0</span> | Reading time: <span id="readingTime">0 min</span></span>
+                    </div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Image URL</label>
-                    <input type="url" id="imageUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2" required>
+                    <label class="block text-sm font-medium text-gray-700">Main Image URL (for thumbnail)</label>
+                    <input type="url" id="imageUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
                 </div>
                 <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add Article</button>
             </form>
+        </div>
+
+        <!-- Image Insertion Modal -->
+        <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+            <div class="bg-white p-6 rounded-lg shadow-lg w-1/2">
+                <h3 class="text-xl mb-4">Insert Image</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Image URL</label>
+                        <input type="url" id="insertImageUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Image Caption (optional)</label>
+                        <input type="text" id="imageCaption" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button id="cancelImageBtn" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">
+                            Cancel
+                        </button>
+                        <button id="confirmImageBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                            Insert
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Articles List -->
@@ -114,7 +145,68 @@
                     this.saveCurrentLayout();
                 });
 
+                // Image modal controls
+                document.getElementById('insertImageBtn').addEventListener('click', () => {
+                    document.getElementById('imageModal').classList.remove('hidden');
+                });
+
+                document.getElementById('cancelImageBtn').addEventListener('click', () => {
+                    document.getElementById('imageModal').classList.add('hidden');
+                });
+
+                document.getElementById('confirmImageBtn').addEventListener('click', () => {
+                    const imageUrl = document.getElementById('insertImageUrl').value;
+                    const caption = document.getElementById('imageCaption').value;
+                    
+                    if (imageUrl) {
+                        this.insertImageToContent(imageUrl, caption);
+                        document.getElementById('imageModal').classList.add('hidden');
+                        document.getElementById('insertImageUrl').value = '';
+                        document.getElementById('imageCaption').value = '';
+                    }
+                });
+
+                // Word count and reading time calculation
+                document.getElementById('content').addEventListener('input', () => {
+                    this.updateWordCountAndReadingTime();
+                });
+
                 this.displayArticles();
+            }
+
+            updateWordCountAndReadingTime() {
+                const content = document.getElementById('content').value;
+                const cleanText = content.replace(/{image:.*?}/g, ''); // Remove image tags for word count
+                const words = cleanText.trim().split(/\s+/).filter(word => word.length > 0);
+                const wordCount = words.length;
+                
+                // Calculate reading time (average 200 words per minute)
+                const readingTimeMinutes = Math.ceil(wordCount / 200);
+                
+                document.getElementById('wordCount').textContent = wordCount;
+                document.getElementById('readingTime').textContent = readingTimeMinutes + ' min';
+            }
+
+            insertImageToContent(imageUrl, caption) {
+                const content = document.getElementById('content');
+                const cursorPos = content.selectionStart;
+                const textBefore = content.value.substring(0, cursorPos);
+                const textAfter = content.value.substring(cursorPos);
+                
+                let imageTag = '';
+                if (caption) {
+                    imageTag = `{image:${imageUrl}|caption:${caption}}`;
+                } else {
+                    imageTag = `{image:${imageUrl}}`;
+                }
+                
+                content.value = textBefore + imageTag + textAfter;
+                this.updateWordCountAndReadingTime();
+                
+                // Set focus back to the content area
+                content.focus();
+                content.selectionStart = cursorPos + imageTag.length;
+                content.selectionEnd = cursorPos + imageTag.length;
             }
 
             generateArticleUrl(articleId) {
@@ -177,15 +269,40 @@
                 return this.articles.filter(article => article.category.toLowerCase() === categoryName.toLowerCase());
             }
 
+            calculateWordCount(content) {
+                const cleanText = content.replace(/{image:.*?}/g, ''); // Remove image tags for word count
+                const words = cleanText.trim().split(/\s+/).filter(word => word.length > 0);
+                return words.length;
+            }
+
+            calculateReadingTime(wordCount) {
+                // Average reading speed is about 200-250 words per minute
+                return Math.ceil(wordCount / 200);
+            }
+
             addArticle() {
+                const title = document.getElementById('title').value;
+                const content = document.getElementById('content').value;
+                
+                // Basic validation - only title and content are required
+                if (!title || !content) {
+                    alert('Title and content are required fields');
+                    return;
+                }
+                
+                const wordCount = this.calculateWordCount(content);
+                const readingTime = this.calculateReadingTime(wordCount);
+                
                 const article = {
                     id: Date.now(),
-                    title: document.getElementById('title').value,
-                    category: document.getElementById('category').value.toLowerCase(),
-                    prominence: document.getElementById('prominence').value,
-                    preview: document.getElementById('preview').value,
-                    content: document.getElementById('content').value,
-                    imageUrl: document.getElementById('imageUrl').value,
+                    title: title,
+                    category: document.getElementById('category').value.toLowerCase() || 'uncategorized',
+                    prominence: document.getElementById('prominence').value || 'grid',
+                    preview: document.getElementById('preview').value || '',
+                    content: content,
+                    imageUrl: document.getElementById('imageUrl').value || '',
+                    wordCount: wordCount,
+                    readingTime: readingTime,
                     date: new Date().toISOString()
                 };
 
@@ -217,6 +334,10 @@
                 this.saveArticles();
                 this.displayArticles();
                 document.getElementById('articleForm').reset();
+                
+                // Reset counters
+                document.getElementById('wordCount').textContent = '0';
+                document.getElementById('readingTime').textContent = '0 min';
             }
 
             deleteArticle(id) {
@@ -314,6 +435,7 @@
                                 </h3>
                                 <p class="text-sm text-gray-600">Category: ${article.category.charAt(0).toUpperCase() + article.category.slice(1)}</p>
                                 <p class="text-sm text-gray-600">Date: ${new Date(article.date).toLocaleDateString()}</p>
+                                <p class="text-sm text-gray-600">Words: ${article.wordCount || 'N/A'} | Reading time: ${article.readingTime || 'N/A'} min</p>
                                 ${promotionControls}
                             </div>
                             <button onclick="articleManager.deleteArticle(${article.id})"
