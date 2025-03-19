@@ -61,17 +61,22 @@
                     <textarea id="preview" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2" rows="2"></textarea>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Content (Use {image:URL} to embed images)</label>
+                    <label class="block text-sm font-medium text-gray-700">Content</label>
                     <textarea id="content" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2" rows="6" required></textarea>
-                    <div class="mt-2">
-                        <button type="button" id="insertImageBtn" class="text-sm bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
-                            Insert Image
-                        </button>
-                        <span class="ml-4 text-sm text-gray-600">Word count: <span id="wordCount">0</span> | Reading time: <span id="readingTime">0 min</span></span>
+                    <div class="mt-2 flex justify-between items-center">
+                        <div class="space-x-2">
+                            <button type="button" id="insertImageBtn" class="text-sm bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+                                Insert Image
+                            </button>
+                            <button type="button" id="insertVideoBtn" class="text-sm bg-purple-500 text-white px-3 py-1 rounded hover:bg-purple-600">
+                                Insert Video
+                            </button>
+                        </div>
+                        <span class="text-sm text-gray-600">Word count: <span id="wordCount">0</span> | Reading time: <span id="readingTime">0 min</span></span>
                     </div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Main Image URL (for thumbnail)</label>
+                    <label class="block text-sm font-medium text-gray-700">Main Image URL (thumbnail)</label>
                     <input type="url" id="imageUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
                 </div>
                 <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add Article</button>
@@ -80,7 +85,7 @@
 
         <!-- Image Insertion Modal -->
         <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-            <div class="bg-white p-6 rounded-lg shadow-lg w-1/2">
+            <div class="bg-white p-6 rounded-lg shadow-lg w-1/2 max-w-md">
                 <h3 class="text-xl mb-4">Insert Image</h3>
                 <div class="space-y-4">
                     <div>
@@ -88,7 +93,7 @@
                         <input type="url" id="insertImageUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Image Caption (optional)</label>
+                        <label class="block text-sm font-medium text-gray-700">Caption (optional)</label>
                         <input type="text" id="imageCaption" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
                     </div>
                     <div class="flex justify-end space-x-3">
@@ -96,6 +101,40 @@
                             Cancel
                         </button>
                         <button id="confirmImageBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                            Insert
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Video Insertion Modal -->
+        <div id="videoModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+            <div class="bg-white p-6 rounded-lg shadow-lg w-1/2 max-w-md">
+                <h3 class="text-xl mb-4">Insert Video</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Video Type</label>
+                        <select id="videoType" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                            <option value="youtube">YouTube</option>
+                            <option value="vimeo">Vimeo</option>
+                            <option value="direct">Direct Video URL</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700" id="videoUrlLabel">YouTube Video ID or URL</label>
+                        <input type="text" id="videoUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                        <p class="text-xs text-gray-500 mt-1" id="videoUrlHelp">For YouTube, you can use the full URL or just the video ID (e.g., dQw4w9WgXcQ)</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Caption (optional)</label>
+                        <input type="text" id="videoCaption" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button id="cancelVideoBtn" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">
+                            Cancel
+                        </button>
+                        <button id="confirmVideoBtn" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">
                             Insert
                         </button>
                     </div>
@@ -145,7 +184,7 @@
                     this.saveCurrentLayout();
                 });
 
-                // Image modal controls
+                // Image insertion functionality
                 document.getElementById('insertImageBtn').addEventListener('click', () => {
                     document.getElementById('imageModal').classList.remove('hidden');
                 });
@@ -166,6 +205,45 @@
                     }
                 });
 
+                // Video insertion functionality
+                document.getElementById('insertVideoBtn').addEventListener('click', () => {
+                    document.getElementById('videoModal').classList.remove('hidden');
+                });
+
+                document.getElementById('cancelVideoBtn').addEventListener('click', () => {
+                    document.getElementById('videoModal').classList.add('hidden');
+                });
+
+                document.getElementById('videoType').addEventListener('change', () => {
+                    const videoType = document.getElementById('videoType').value;
+                    const urlLabel = document.getElementById('videoUrlLabel');
+                    const urlHelp = document.getElementById('videoUrlHelp');
+                    
+                    if (videoType === 'youtube') {
+                        urlLabel.textContent = 'YouTube Video ID or URL';
+                        urlHelp.textContent = 'For YouTube, you can use the full URL or just the video ID (e.g., dQw4w9WgXcQ)';
+                    } else if (videoType === 'vimeo') {
+                        urlLabel.textContent = 'Vimeo Video ID or URL';
+                        urlHelp.textContent = 'For Vimeo, you can use the full URL or just the video ID (e.g., 76979871)';
+                    } else {
+                        urlLabel.textContent = 'Direct Video URL';
+                        urlHelp.textContent = 'Enter the direct URL to your video file (mp4, webm, etc.)';
+                    }
+                });
+
+                document.getElementById('confirmVideoBtn').addEventListener('click', () => {
+                    const videoType = document.getElementById('videoType').value;
+                    const videoUrl = document.getElementById('videoUrl').value;
+                    const caption = document.getElementById('videoCaption').value;
+                    
+                    if (videoUrl) {
+                        this.insertVideoToContent(videoType, videoUrl, caption);
+                        document.getElementById('videoModal').classList.add('hidden');
+                        document.getElementById('videoUrl').value = '';
+                        document.getElementById('videoCaption').value = '';
+                    }
+                });
+
                 // Word count and reading time calculation
                 document.getElementById('content').addEventListener('input', () => {
                     this.updateWordCountAndReadingTime();
@@ -174,31 +252,15 @@
                 this.displayArticles();
             }
 
-            updateWordCountAndReadingTime() {
-                const content = document.getElementById('content').value;
-                const cleanText = content.replace(/{image:.*?}/g, ''); // Remove image tags for word count
-                const words = cleanText.trim().split(/\s+/).filter(word => word.length > 0);
-                const wordCount = words.length;
-                
-                // Calculate reading time (average 200 words per minute)
-                const readingTimeMinutes = Math.ceil(wordCount / 200);
-                
-                document.getElementById('wordCount').textContent = wordCount;
-                document.getElementById('readingTime').textContent = readingTimeMinutes + ' min';
-            }
-
             insertImageToContent(imageUrl, caption) {
                 const content = document.getElementById('content');
                 const cursorPos = content.selectionStart;
                 const textBefore = content.value.substring(0, cursorPos);
                 const textAfter = content.value.substring(cursorPos);
                 
-                let imageTag = '';
-                if (caption) {
-                    imageTag = `{image:${imageUrl}|caption:${caption}}`;
-                } else {
-                    imageTag = `{image:${imageUrl}}`;
-                }
+                let imageTag = caption 
+                    ? `\n<img src="${imageUrl}" alt="${caption}" class="w-full my-4">\n<figcaption class="text-sm text-gray-600 text-center mb-4">${caption}</figcaption>\n` 
+                    : `\n<img src="${imageUrl}" alt="Image" class="w-full my-4">\n`;
                 
                 content.value = textBefore + imageTag + textAfter;
                 this.updateWordCountAndReadingTime();
@@ -207,6 +269,74 @@
                 content.focus();
                 content.selectionStart = cursorPos + imageTag.length;
                 content.selectionEnd = cursorPos + imageTag.length;
+            }
+
+            insertVideoToContent(videoType, videoUrl, caption) {
+                const content = document.getElementById('content');
+                const cursorPos = content.selectionStart;
+                const textBefore = content.value.substring(0, cursorPos);
+                const textAfter = content.value.substring(cursorPos);
+                
+                let videoTag = '';
+                
+                // Process the URL based on video type
+                if (videoType === 'youtube') {
+                    let videoId = videoUrl;
+                    // Extract YouTube video ID if a full URL is provided
+                    if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+                        const urlObj = new URL(videoUrl);
+                        if (videoUrl.includes('youtube.com')) {
+                            videoId = urlObj.searchParams.get('v');
+                        } else if (videoUrl.includes('youtu.be')) {
+                            videoId = urlObj.pathname.substring(1);
+                        }
+                    }
+                    videoTag = `\n<div class="video-container my-4">\n  <iframe width="100%" height="315" src="https://www.youtube.com/embed/${videoId}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>\n</div>\n`;
+                } else if (videoType === 'vimeo') {
+                    let videoId = videoUrl;
+                    // Extract Vimeo video ID if a full URL is provided
+                    if (videoUrl.includes('vimeo.com')) {
+                        videoId = videoUrl.split('/').pop();
+                    }
+                    videoTag = `\n<div class="video-container my-4">\n  <iframe src="https://player.vimeo.com/video/${videoId}" width="100%" height="315" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>\n</div>\n`;
+                } else {
+                    // Direct video URL
+                    videoTag = `\n<div class="video-container my-4">\n  <video width="100%" controls>\n    <source src="${videoUrl}" type="video/mp4">\n    Your browser does not support the video tag.\n  </video>\n</div>\n`;
+                }
+                
+                // Add caption if provided
+                if (caption) {
+                    videoTag += `<figcaption class="text-sm text-gray-600 text-center mb-4">${caption}</figcaption>\n`;
+                }
+                
+                content.value = textBefore + videoTag + textAfter;
+                this.updateWordCountAndReadingTime();
+                
+                // Set focus back to the content area
+                content.focus();
+                content.selectionStart = cursorPos + videoTag.length;
+                content.selectionEnd = cursorPos + videoTag.length;
+            }
+
+            updateWordCountAndReadingTime() {
+                const content = document.getElementById('content').value;
+                const wordCount = this.calculateWordCount(content);
+                const readingTime = this.calculateReadingTime(wordCount);
+                
+                document.getElementById('wordCount').textContent = wordCount;
+                document.getElementById('readingTime').textContent = readingTime + ' min';
+            }
+
+            calculateWordCount(content) {
+                // Remove HTML tags for counting words
+                const cleanText = content.replace(/<[^>]*>/g, ' ');
+                const words = cleanText.trim().split(/\s+/).filter(word => word.length > 0);
+                return words.length;
+            }
+
+            calculateReadingTime(wordCount) {
+                // Average reading speed is about 200-250 words per minute
+                return Math.ceil(wordCount / 200);
             }
 
             generateArticleUrl(articleId) {
@@ -241,7 +371,7 @@
                         .map(a => a.id)
                 };
 
-                const pageName = this.currentPage; // Keep the .html extension
+                const pageName = this.currentPage;
                 this.pageLayouts[pageName] = layout;
                 this.savePageLayouts();
                 alert(`Layout saved to ${this.currentPage}`);
@@ -269,22 +399,11 @@
                 return this.articles.filter(article => article.category.toLowerCase() === categoryName.toLowerCase());
             }
 
-            calculateWordCount(content) {
-                const cleanText = content.replace(/{image:.*?}/g, ''); // Remove image tags for word count
-                const words = cleanText.trim().split(/\s+/).filter(word => word.length > 0);
-                return words.length;
-            }
-
-            calculateReadingTime(wordCount) {
-                // Average reading speed is about 200-250 words per minute
-                return Math.ceil(wordCount / 200);
-            }
-
             addArticle() {
                 const title = document.getElementById('title').value;
                 const content = document.getElementById('content').value;
                 
-                // Basic validation - only title and content are required
+                // Only title and content are required
                 if (!title || !content) {
                     alert('Title and content are required fields');
                     return;
@@ -292,6 +411,9 @@
                 
                 const wordCount = this.calculateWordCount(content);
                 const readingTime = this.calculateReadingTime(wordCount);
+                
+                // Check if the article contains videos
+                const hasVideo = content.includes('<iframe') || content.includes('<video');
                 
                 const article = {
                     id: Date.now(),
@@ -303,6 +425,7 @@
                     imageUrl: document.getElementById('imageUrl').value || '',
                     wordCount: wordCount,
                     readingTime: readingTime,
+                    hasVideo: hasVideo,
                     date: new Date().toISOString()
                 };
 
@@ -334,8 +457,6 @@
                 this.saveArticles();
                 this.displayArticles();
                 document.getElementById('articleForm').reset();
-                
-                // Reset counters
                 document.getElementById('wordCount').textContent = '0';
                 document.getElementById('readingTime').textContent = '0 min';
             }
@@ -424,18 +545,23 @@
                 }
                 promotionControls += '</div>';
 
+                const videoIndicator = article.hasVideo 
+                    ? '<span class="ml-2 px-2 py-0.5 bg-purple-100 text-purple-800 text-xs rounded-full">Video</span>' 
+                    : '';
+
                 return `
                     <div class="border-b border-gray-200 pb-4">
                         <div class="flex justify-between items-start">
                             <div>
-                                <h3 class="font-medium">
+                                <h3 class="font-medium flex items-center">
                                     <a href="${this.generateArticleUrl(article.id)}" target="_blank" class="text-blue-600 hover:underline">
                                         ${article.title}
                                     </a>
+                                    ${videoIndicator}
                                 </h3>
                                 <p class="text-sm text-gray-600">Category: ${article.category.charAt(0).toUpperCase() + article.category.slice(1)}</p>
                                 <p class="text-sm text-gray-600">Date: ${new Date(article.date).toLocaleDateString()}</p>
-                                <p class="text-sm text-gray-600">Words: ${article.wordCount || 'N/A'} | Reading time: ${article.readingTime || 'N/A'} min</p>
+                                <p class="text-sm text-gray-600">Words: ${article.wordCount || 0} | Reading time: ${article.readingTime || 0} min</p>
                                 ${promotionControls}
                             </div>
                             <button onclick="articleManager.deleteArticle(${article.id})"
