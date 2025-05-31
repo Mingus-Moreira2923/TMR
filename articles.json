@@ -1,0 +1,322 @@
+{
+  "layout": [
+    {
+      "type": "hero",
+      "id": "hero-1",
+      "config": {
+        "leftColumn": {
+          "articles": ["left-1", "left-2", "left-3"]
+        },
+        "mainFeature": {
+          "article": "main-1"
+        },
+        "rightColumn": {
+          "articles": ["secondary-1", "secondary-2"]
+        }
+      }
+    },
+    {
+      "type": "grid",
+      "id": "grid-1",
+      "config": {
+        "columns": 3,
+        "articles": ["grid-1", "grid-2", "grid-3", "grid-4", "grid-5", "grid-6"]
+      }
+    },
+    {
+      "type": "main-feature",
+      "id": "feature-2",
+      "config": {
+        "article": "main-2"
+      }
+    },
+    {
+      "type": "two-column",
+      "id": "two-col-1",
+      "config": {
+        "articles": ["secondary-3", "secondary-4"]
+      }
+    },
+    {
+      "type": "grid",
+      "id": "grid-2",
+      "config": {
+        "columns": 4,
+        "articles": ["grid-7", "grid-8", "grid-9", "grid-10"]
+      }
+    },
+    {
+      "type": "list-view",
+      "id": "list-1",
+      "config": {
+        "articles": ["list-1", "list-2", "list-3", "list-4"]
+      }
+    }
+  ],
+  "articles": {
+     "main-1": {
+      "id": "main-1",
+      "title": "Breaking: Major Economic Policy Changes Announced",
+      "preview": "The administration unveiled sweeping economic reforms that could reshape the financial landscape for years to come. Industry experts are calling it the most significant policy shift in decades.",
+      "content": "<p>In a landmark announcement today, government officials revealed comprehensive economic policy changes that promise to transform the nation's financial sector...</p><p>The new policies focus on three key areas: tax reform, regulatory oversight, and international trade agreements...</p>",
+      "author": "Sarah Johnson",
+      "date": "2025-01-14",
+      "category": "Economy",
+      "imageUrl": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&h=600&fit=crop",
+      "readingTime": 8
+    },
+    "main-1": {
+      "id": "main-1",
+      "title": "Breaking: Major Economic Policy Changes Announced",
+      "preview": "The administration unveiled sweeping economic reforms that could reshape the financial landscape for years to come. Industry experts are calling it the most significant policy shift in decades.",
+      "content": "<p>In a landmark announcement today, government officials revealed comprehensive economic policy changes that promise to transform the nation's financial sector...</p><p>The new policies focus on three key areas: tax reform, regulatory oversight, and international trade agreements...</p>",
+      "author": "Sarah Johnson",
+      "date": "2025-01-14",
+      "category": "Economy",
+      "imageUrl": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&h=600&fit=crop",
+      "readingTime": 8
+    },
+    "main-2": {
+      "id": "main-2",
+      "title": "Technology Giants Face New Regulatory Scrutiny",
+      "preview": "Congressional hearings reveal bipartisan concerns about market concentration and data privacy practices among major tech companies.",
+      "content": "<p>Tech industry leaders appeared before Congress today to address mounting concerns about their market dominance and data handling practices...</p>",
+      "author": "Michael Chen",
+      "date": "2025-01-14",
+      "category": "Technology",
+      "imageUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=600&fit=crop",
+      "readingTime": 6
+    },
+    "left-1": {
+      "id": "left-1",
+      "title": "Climate Summit Reaches Historic Agreement",
+      "preview": "World leaders commit to ambitious carbon reduction targets.",
+      "content": "<p>After days of intense negotiations, the international climate summit has produced a groundbreaking agreement...</p>",
+      "author": "Emma Rodriguez",
+      "date": "2025-01-14",
+      "category": "World",
+      "imageUrl": "https://images.unsplash.com/photo-1569163139394-de4e4f43e4e3?w=400&h=300&fit=crop",
+      "readingTime": 4
+    },
+    "left-2": {
+      "id": "left-2",
+      "title": "Healthcare Innovation Breakthrough",
+      "preview": "New treatment shows promising results in clinical trials.",
+      "content": "<p>Medical researchers announce significant progress in treating a previously incurable condition...</p>",
+      "author": "Dr. James Wilson",
+      "date": "2025-01-14",
+      "category": "Health",
+      "imageUrl": "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=400&h=300&fit=crop",
+      "readingTime": 5
+    },
+    "left-3": {
+      "id": "left-3",
+      "title": "Education Reform Initiative Launched",
+      "preview": "New program aims to modernize curriculum nationwide.",
+      "content": "<p>Educational authorities unveil comprehensive reform package designed to prepare students for the digital age...</p>",
+      "author": "Lisa Thompson",
+      "date": "2025-01-14",
+      "category": "Education",
+      "imageUrl": "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=300&fit=crop",
+      "readingTime": 3
+    },
+    "secondary-1": {
+      "id": "secondary-1",
+      "title": "Stock Market Reaches New Heights",
+      "preview": "Major indices close at record levels amid strong earnings reports and economic optimism.",
+      "content": "<p>Wall Street celebrated another milestone today as key market indicators reached unprecedented heights...</p>",
+      "author": "Robert Kim",
+      "date": "2025-01-14",
+      "category": "Finance",
+      "imageUrl": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600&h=400&fit=crop",
+      "readingTime": 4
+    },
+    "secondary-2": {
+      "id": "secondary-2",
+      "title": "Space Exploration Milestone Achieved",
+      "preview": "Private space company successfully completes ambitious mission to establish lunar research station.",
+      "content": "<p>In a historic achievement for commercial space exploration, the mission has successfully established a permanent research facility...</p>",
+      "author": "Amanda Foster",
+      "date": "2025-01-14",
+      "category": "Science",
+      "imageUrl": "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=600&h=400&fit=crop",
+      "readingTime": 5
+    },
+    "secondary-3": {
+      "id": "secondary-3",
+      "title": "Renewable Energy Breakthrough",
+      "preview": "Scientists develop more efficient solar panel technology.",
+      "content": "<p>Revolutionary advances in photovoltaic technology promise to dramatically reduce renewable energy costs...</p>",
+      "author": "Dr. Maria Santos",
+      "date": "2025-01-14",
+      "category": "Energy",
+      "imageUrl": "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600&h=400&fit=crop",
+      "readingTime": 4
+    },
+    "secondary-4": {
+      "id": "secondary-4",
+      "title": "Urban Planning Revolution",
+      "preview": "Smart city initiatives transform metropolitan areas.",
+      "content": "<p>Cutting-edge urban planning projects are reshaping how we think about city life and infrastructure...</p>",
+      "author": "Carlos Mendez",
+      "date": "2025-01-14",
+      "category": "Urban Development",
+      "imageUrl": "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1f?w=600&h=400&fit=crop",
+      "readingTime": 3
+    },
+    "grid-1": {
+      "id": "grid-1",
+      "title": "International Trade Agreements Updated",
+      "preview": "New bilateral agreements strengthen economic partnerships.",
+      "content": "<p>Trade representatives finalize agreements that will boost international commerce...</p>",
+      "author": "Jennifer Park",
+      "date": "2025-01-14",
+      "category": "International",
+      "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=350&fit=crop",
+      "readingTime": 3
+    },
+    "grid-2": {
+      "id": "grid-2",
+      "title": "Cybersecurity Threat Level Raised",
+      "preview": "Government agencies warn of increased digital risks.",
+      "content": "<p>Security experts issue alerts about sophisticated new cyber threats targeting critical infrastructure...</p>",
+      "author": "Alex Turner",
+      "date": "2025-01-14",
+      "category": "Security",
+      "imageUrl": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=500&h=350&fit=crop",
+      "readingTime": 4
+    },
+    "grid-3": {
+      "id": "grid-3",
+      "title": "Cultural Heritage Preservation Project",
+      "preview": "UNESCO initiative protects historical sites worldwide.",
+      "content": "<p>International efforts to preserve cultural landmarks receive significant funding boost...</p>",
+      "author": "Elena Vasquez",
+      "date": "2025-01-14",
+      "category": "Culture",
+      "imageUrl": "https://images.unsplash.com/photo-1539650116574-75c0c6d73f6b?w=500&h=350&fit=crop",
+      "readingTime": 3
+    },
+    "grid-4": {
+      "id": "grid-4",
+      "title": "Agricultural Innovation Summit",
+      "preview": "Farmers adopt cutting-edge sustainable practices.",
+      "content": "<p>Agricultural leaders showcase revolutionary farming techniques that promise higher yields with lower environmental impact...</p>",
+      "author": "Thomas Miller",
+      "date": "2025-01-14",
+      "category": "Agriculture",
+      "imageUrl": "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=500&h=350&fit=crop",
+      "readingTime": 4
+    },
+    "grid-5": {
+      "id": "grid-5",
+      "title": "Mental Health Awareness Campaign",
+      "preview": "New initiatives focus on workplace wellbeing.",
+      "content": "<p>Mental health professionals launch comprehensive programs to address workplace stress and anxiety...</p>",
+      "author": "Dr. Patricia Lee",
+      "date": "2025-01-14",
+      "category": "Health",
+      "imageUrl": "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=500&h=350&fit=crop",
+      "readingTime": 3
+    },
+    "grid-6": {
+      "id": "grid-6",
+      "title": "Transportation Infrastructure Upgrade",
+      "preview": "Smart highway systems improve traffic efficiency.",
+      "content": "<p>Advanced traffic management systems are being deployed across major metropolitan areas...</p>",
+      "author": "David Chang",
+      "date": "2025-01-14",
+      "category": "Transportation",
+      "imageUrl": "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=500&h=350&fit=crop",
+      "readingTime": 4
+    },
+    "grid-7": {
+      "id": "grid-7",
+      "title": "Artificial Intelligence Ethics Board Formed",
+      "preview": "Industry leaders establish guidelines for AI development.",
+      "content": "<p>Tech companies collaborate to create ethical standards for artificial intelligence applications...</p>",
+      "author": "Rachel Green",
+      "date": "2025-01-14",
+      "category": "Technology",
+      "imageUrl": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&h=300&fit=crop",
+      "readingTime": 3
+    },
+    "grid-8": {
+      "id": "grid-8",
+      "title": "Ocean Conservation Breakthrough",
+      "preview": "Marine biologists discover new species protection methods.",
+      "content": "<p>Revolutionary conservation techniques show promise in protecting endangered marine ecosystems...</p>",
+      "author": "Dr. Brian O'Connor",
+      "date": "2025-01-14",
+      "category": "Environment",
+      "imageUrl": "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=300&fit=crop",
+      "readingTime": 4
+    },
+    "grid-9": {
+      "id": "grid-9",
+      "title": "Digital Currency Regulation Updates",
+      "preview": "Central banks clarify cryptocurrency policies.",
+      "content": "<p>Financial regulators announce new frameworks for digital currency oversight and consumer protection...</p>",
+      "author": "Steven Liu",
+      "date": "2025-01-14",
+      "category": "Finance",
+      "imageUrl": "https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=400&h=300&fit=crop",
+      "readingTime": 3
+    },
+    "grid-10": {
+      "id": "grid-10",
+      "title": "Youth Leadership Initiative Launched",
+      "preview": "Programs empower next generation of civic leaders.",
+      "content": "<p>Educational institutions partner with civic organizations to develop leadership skills in young people...</p>",
+      "author": "Maya Patel",
+      "date": "2025-01-14",
+      "category": "Education",
+      "imageUrl": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=300&fit=crop",
+      "readingTime": 3
+    },
+    "list-1": {
+      "id": "list-1",
+      "title": "Entertainment Industry Awards Season Kicks Off",
+      "preview": "Critics and audiences prepare for year's biggest ceremonies.",
+      "content": "<p>The entertainment world buzzes with anticipation as award season begins...</p>",
+      "author": "Jessica Adams",
+      "date": "2025-01-14",
+      "category": "Entertainment",
+      "imageUrl": "https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=600&h=300&fit=crop",
+      "readingTime": 2
+    },
+    "list-2": {
+      "id": "list-2",
+      "title": "Sports Championship Finals Approach",
+      "preview": "Teams prepare for season-defining matches.",
+      "content": "<p>Athletic competitions reach their climax as championship finals draw near...</p>",
+      "author": "Mark Robinson",
+      "date": "2025-01-14",
+      "category": "Sports",
+      "imageUrl": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600&h=300&fit=crop",
+      "readingTime": 3
+    },
+    "list-3": {
+      "id": "list-3",
+      "title": "Fashion Week Highlights Sustainable Design",
+      "preview": "Designers showcase eco-friendly collections.",
+      "content": "<p>Fashion industry leaders embrace sustainability with innovative eco-conscious designs...</p>",
+      "author": "Sophia Wang",
+      "date": "2025-01-14",
+      "category": "Fashion",
+      "imageUrl": "https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&h=300&fit=crop",
+      "readingTime": 2
+    },
+    "list-4": {
+      "id": "list-4",
+      "title": "Culinary Trends Reshape Restaurant Industry",
+      "preview": "Chefs experiment with fusion cuisines and sustainable ingredients.",
+      "content": "<p>The restaurant industry evolves with innovative culinary approaches and sustainable practices...</p>",
+      "author": "Antonio Garcia",
+      "date": "2025-01-14",
+      "category": "Food",
+      "imageUrl": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&h=300&fit=crop",
+      "readingTime": 3
+    }
+  }
+}
