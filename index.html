@@ -1,289 +1,840 @@
 <!DOCTYPE html>
 <html lang="en">
-<head> 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The American Ledger</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
-    <link href="https://fonts.cdnjs.com/css?family=Playfair+Display:400,700,900&display=swap" rel="stylesheet">
-    <!-- React Dependencies -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.development.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.development.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
-    <style>
-        #admin-button {
-            display: none;
-        }
-        .article-transition {
-            transition: all 0.3s ease-in-out;
-        }
-        .article-expanded {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 50;
-            background: white;
-            overflow-y: auto;
-        }
-        /* Additional styles for responsive video embeds */
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
-            height: 0;
-            overflow: hidden;
-        }
-        .video-container iframe,
-        .video-container video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-    </style>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The American Ledger</title>
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"
+    rel="stylesheet"
+  />
+  <link
+    href="https://fonts.cdnjs.com/css?family=Playfair+Display:400,700,900&display=swap"
+    rel="stylesheet"
+  />
+  <!-- React Dependencies -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.development.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.development.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+
+  <style>
+    body {
+      background-color: #ffffff;
+      font-family: Georgia, 'Times New Roman', serif;
+    }
+    
+    .article-transition {
+      transition: all 0.3s ease-in-out;
+    }
+    
+    .article-expanded {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 50;
+      background: #ffffff;
+      overflow-y: auto;
+    }
+    
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .line-clamp-3 {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .line-clamp-4 {
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .newspaper-border {
+      border-right: 1px solid #e5e5e5;
+      padding-right: 1rem;
+      margin-right: 1rem;
+    }
+    
+    .newspaper-border:last-child {
+      border-right: none;
+      padding-right: 0;
+      margin-right: 0;
+    }
+    
+    .headline-main {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+    
+    .headline-secondary {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+    
+    .byline {
+      font-size: 0.875rem;
+      color: #666;
+      font-style: italic;
+    }
+    
+    .category-tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #333;
+    }
+
+    /* Mobile-specific styles */
+    @media (max-width: 768px) {
+      /* Top bar mobile */
+      .mobile-top-bar {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      }
+
+      /* Header mobile */
+      .mobile-header {
+        padding: 1rem 0;
+      }
+      
+      .mobile-header h1 {
+        font-size: 2.5rem !important;
+        margin-bottom: 0;
+      }
+
+      /* Navigation mobile */
+      .mobile-nav {
+        position: sticky;
+        top: 40px;
+        z-index: 35;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+      
+      .mobile-nav::-webkit-scrollbar {
+        display: none;
+      }
+      
+      .mobile-nav-links {
+        display: flex;
+        white-space: nowrap;
+        padding: 0.75rem 1rem;
+        gap: 1.5rem;
+      }
+      
+      .mobile-nav-links a {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #333;
+        text-decoration: none;
+        padding: 0.5rem 0;
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s ease;
+      }
+      
+      .mobile-nav-links a:hover,
+      .mobile-nav-links a.active {
+        color: #000;
+        border-bottom-color: #000;
+      }
+
+      /* Content mobile */
+      .mobile-content {
+        padding: 1rem;
+      }
+
+      /* Remove desktop borders on mobile */
+      .newspaper-border {
+        border-right: none;
+        padding-right: 0;
+        margin-right: 0;
+        border-bottom: 1px solid #e5e5e5;
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      .newspaper-border:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-bottom: 0;
+      }
+
+      /* Mobile article styles */
+      .mobile-hero {
+        margin-bottom: 2rem;
+      }
+      
+      .mobile-hero .headline-main {
+        font-size: 1.75rem;
+        line-height: 1.2;
+        margin-bottom: 1rem;
+      }
+      
+      .mobile-hero img {
+        height: 200px;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+      }
+      
+      .mobile-hero .category-tag {
+        color: #666;
+        margin-bottom: 0.5rem;
+      }
+
+      /* Mobile secondary articles */
+      .mobile-secondary {
+        margin-bottom: 1.5rem;
+      }
+      
+      .mobile-secondary .headline-secondary {
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
+      }
+      
+      .mobile-secondary img {
+        height: 160px;
+        border-radius: 6px;
+        margin-bottom: 0.75rem;
+      }
+
+      /* Mobile small articles */
+      .mobile-small {
+        display: flex;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #f0f0f0;
+      }
+      
+      .mobile-small:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+      
+      .mobile-small img {
+        width: 80px;
+        height: 60px;
+        border-radius: 4px;
+        flex-shrink: 0;
+      }
+      
+      .mobile-small .headline-secondary {
+        font-size: 1rem;
+        line-height: 1.3;
+        margin-bottom: 0.25rem;
+      }
+      
+      .mobile-small .byline {
+        font-size: 0.75rem;
+        color: #888;
+      }
+
+      /* Mobile sidebar articles */
+      .mobile-sidebar {
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #f0f0f0;
+      }
+      
+      .mobile-sidebar:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+      
+      .mobile-sidebar .headline-secondary {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      /* Mobile expanded article */
+      .mobile-expanded {
+        padding: 1rem;
+      }
+      
+      .mobile-expanded h1 {
+        font-size: 1.75rem;
+        line-height: 1.2;
+        margin-bottom: 1rem;
+      }
+      
+      .mobile-expanded img {
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+      }
+      
+      .mobile-expanded .prose {
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+      
+      .mobile-expanded .prose p {
+        margin-bottom: 1rem;
+      }
+
+      /* Mobile touch improvements */
+      .mobile-touch-target {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+      }
+
+      /* Mobile typography adjustments */
+      .mobile-typography {
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      /* Hide elements on mobile */
+      .desktop-only {
+        display: none;
+      }
+    }
+
+    /* Desktop styles - hide mobile elements */
+    @media (min-width: 769px) {
+      .mobile-only {
+        display: none;
+      }
+    }
+
+    /* Touch improvements for all devices */
+    .touch-target {
+      min-height: 44px;
+      min-width: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Loading states */
+    .loading-skeleton {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: loading 1.5s infinite;
+    }
+
+    @keyframes loading {
+      0% {
+        background-position: 200% 0;
+      }
+      100% {
+        background-position: -200% 0;
+      }
+    }
+  </style>
 </head>
-<body class="bg-white">
-    <!-- Top Bar -->
-    <div class="border-b">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center py-2 text-sm">
-                <div>
-                    <span class="text-gray-600">Tuesday, January 14, 2025</span>
-                </div>
-                <div>
-                    <a href="#" class="text-gray-600 hover:text-gray-900">Today's Paper</a>
-                </div>
-            </div>
+
+<body class="bg-white text-black">
+  <!-- Top Bar -->
+  <div class="border-b bg-white mobile-top-bar">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between items-center py-2 text-sm">
+        <div>
+          <span class="text-black">Tuesday, January 14, 2025</span>
         </div>
+        <div class="desktop-only">
+          <a href="#" class="text-black hover:text-blue-600">Today's Paper</a>
+        </div>
+        <div class="mobile-only">
+          <button class="touch-target text-black">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Masthead -->
-    <header class="container mx-auto px-4 py-6 text-center">
-        <h1 class="text-6xl font-bold" style="font-family: 'Playfair Display', serif;">
-The American Ledger        </h1>
-    </header>
+  <!-- Masthead -->
+  <header class="max-w-7xl mx-auto px-4 py-6 text-center bg-white mobile-header">
+    <h1 class="text-6xl font-bold" style="font-family: 'Playfair Display', serif;">
+      The American Ledger
+    </h1>
+  </header>
 
-    <!-- Navigation -->
-    <nav class="border-t border-b">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-center space-x-6 py-3 text-sm">
-                <a href="index.html" class="text-gray-900 hover:text-blue-600 font-medium">Home</a>
-                <a href="world.html" class="text-gray-900 hover:text-blue-600">World</a>
-                <a href="politics.html" class="text-gray-900 hover:text-blue-600">Politics</a>
-                <a href="economy.html" class="text-gray-900 hover:text-blue-600">Economy</a>
-                <a href="business.html" class="text-gray-900 hover:text-blue-600">Business</a>
-                <a href="tech.html" class="text-gray-900 hover:text-blue-600">Tech</a>
-                <a href="opinion.html" class="text-gray-900 hover:text-blue-600">Opinion</a>
-                <a href="US.html" class="text-gray-900 hover:text-blue-600">U.S.</a>
-            </div>
-        </div>
-    </nav>
+  <!-- Navigation -->
+  <nav class="border-t border-b bg-white mobile-nav">
+    <div class="max-w-7xl mx-auto px-4 desktop-only">
+      <div class="flex justify-center space-x-6 py-3 text-sm">
+        <a href="index.html" class="text-black hover:text-blue-600 font-medium">Home</a>
+        <a href="world.html" class="text-black hover:text-blue-600">World</a>
+        <a href="politics.html" class="text-black hover:text-blue-600">Politics</a>
+        <a href="economy.html" class="text-black hover:text-blue-600">Economy</a>
+        <a href="business.html" class="text-black hover:text-blue-600">Business</a>
+        <a href="tech.html" class="text-black hover:text-blue-600">Tech</a>
+        <a href="opinion.html" class="text-black hover:text-blue-600">Opinion</a>
+        <a href="US.html" class="text-black hover:text-blue-600">U.S.</a>
+      </div>
+    </div>
+    <div class="mobile-only mobile-nav-links">
+      <a href="index.html" class="active">Home</a>
+      <a href="world.html">World</a>
+      <a href="politics.html">Politics</a>
+      <a href="economy.html">Economy</a>
+      <a href="business.html">Business</a>
+      <a href="tech.html">Tech</a>
+      <a href="opinion.html">Opinion</a>
+      <a href="US.html">U.S.</a>
+    </div>
+  </nav>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
-        <!-- Hidden Admin Button -->
-        <div class="text-center mb-8">
-            <a href="admin.html" id="admin-button">
-                <button class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
-                    Go to Admin Panel
-                </button>
-            </a>
-        </div>
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 py-6 bg-white mobile-content">
+    <div id="root"></div>
+  </main>
 
-        <!-- React Root -->
-        <div id="root"></div>
-    </main>
+  <script type="text/babel">
+    const Article = ({ article, size = "default" }) => {
+      const [isExpanded, setIsExpanded] = React.useState(false);
 
-    <!-- Admin Access Script -->
-    <script>
-        const adminPassword = "*N$8zW@jT6p3";
-        document.addEventListener("keydown", (event) => {
-            if (event.ctrlKey && event.shiftKey && event.key === "A") {
-                const userPassword = prompt("Enter admin password:");
-                if (userPassword === adminPassword) {
-                    document.getElementById("admin-button").style.display = "block";
-                    alert("Admin access granted.");
-                } else {
-                    alert("Incorrect password. Access denied.");
-                }
-            }
-        });
-    </script>
+      if (!article) return null;
 
-    <!-- React Components -->
-    <script type="text/babel">
-        // Article Component (updated to render HTML content properly)
-        const Article = ({ article, isMain = false, isSecondary = false }) => {
-            const [isExpanded, setIsExpanded] = React.useState(false);
+      const handleClick = () => setIsExpanded(!isExpanded);
+      const createMarkup = (htmlContent) => ({ __html: htmlContent });
 
-            const handleClick = () => {
-                setIsExpanded(!isExpanded);
-            };
-
-            // Create a safe HTML rendering function
-            const createMarkup = (htmlContent) => {
-                return { __html: htmlContent };
-            };
-
-            if (isExpanded) {
-                return (
-                    <div className="article-expanded">
-                        <div className="max-w-4xl mx-auto px-4 py-8">
-                            <button 
-                                onClick={handleClick}
-                                className="mb-4 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-                            >
-                                ← Back
-                            </button>
-                            
-                            <article>
-                                <img 
-                                    src={article.imageUrl || "/api/placeholder/800/400"} 
-                                    alt={article.title} 
-                                    className="w-full h-96 object-cover rounded-lg mb-6"
-                                />
-                                <h1 className="text-4xl font-serif mb-4">{article.title}</h1>
-                                <div className="text-gray-600 mb-4">
-                                    By {article.author || "Staff Reporter"} | {new Date(article.date).toLocaleDateString()}
-                                </div>
-                                {/* Use dangerouslySetInnerHTML to render HTML content */}
-                                <div 
-                                    className="prose max-w-none" 
-                                    dangerouslySetInnerHTML={createMarkup(article.content)}
-                                />
-                            </article>
-                        </div>
-                    </div>
-                );
-            }
-
-            if (isMain) {
-                return (
-                    <article 
-                        className="bg-white shadow-lg rounded-lg overflow-hidden cursor-pointer hover:shadow-xl article-transition"
-                        onClick={handleClick}
-                    >
-                        <img 
-                            src={article.imageUrl || "/api/placeholder/800/400"} 
-                            alt={article.title} 
-                            className="w-full h-96 object-cover"
-                        />
-                        <div className="p-6">
-                            <span className="text-sm text-gray-500 uppercase">{article.category}</span>
-                            <h2 className="text-4xl font-bold mt-2 mb-4" style={{fontFamily: "'Playfair Display', serif"}}>{article.title}</h2>
-                            <p className="text-xl text-gray-700 leading-relaxed mb-4">{article.preview}</p>
-                            <div className="flex items-center text-sm text-gray-500">
-                                <span>{article.readingTime || 6} MIN READ</span>
-                                <span className="mx-2">|</span>
-                                <button className="text-blue-600 hover:text-blue-800">Read More →</button>
-                            </div>
-                        </div>
-                    </article>
-                );
-            }
-
-            if (isSecondary) {
-                return (
-                    <article 
-                        className="bg-white shadow-lg rounded-lg overflow-hidden cursor-pointer hover:shadow-xl article-transition"
-                        onClick={handleClick}
-                    >
-                        <img 
-                            src={article.imageUrl || "/api/placeholder/400/200"} 
-                            alt={article.title} 
-                            className="w-full h-64 object-cover"
-                        />
-                        <div className="p-4">
-                            <span className="text-xs text-gray-500 uppercase">{article.category}</span>
-                            <h3 className="text-xl font-bold mt-2 mb-3" style={{fontFamily: "'Playfair Display', serif"}}>{article.title}</h3>
-                            <p className="text-gray-700 text-sm leading-relaxed">{article.preview}</p>
-                        </div>
-                    </article>
-                );
-            }
-
-            return (
-                <article 
-                    className="bg-white shadow-lg rounded-lg overflow-hidden cursor-pointer hover:shadow-xl article-transition"
-                    onClick={handleClick}
-                >
-                    <img 
-                        src={article.imageUrl || "/api/placeholder/400/200"} 
-                        alt={article.title} 
-                        className="w-full h-48 object-cover"
-                    />
-                    <div className="p-4">
-                        <span className="text-xs text-gray-500 uppercase">{article.category}</span>
-                        <h3 className="text-lg font-bold mt-1 mb-2" style={{fontFamily: "'Playfair Display', serif"}}>{article.title}</h3>
-                        <p className="text-gray-600 text-sm">{article.preview}</p>
-                    </div>
-                </article>
-            );
-        };
-
-        // HomePage Component
-        const HomePage = () => {
-            const [articles, setArticles] = React.useState([]);
-
-            React.useEffect(() => {
-                const loadArticles = () => {
-                    const allArticles = JSON.parse(localStorage.getItem('articles')) || [];
-                    setArticles(allArticles);
-                };
-
-                loadArticles();
-                const interval = setInterval(loadArticles, 30000);
-                return () => clearInterval(interval);
-            }, []);
-
-            const mainFeature = articles.find(a => a.prominence === 'main');
-            const secondaryFeatures = articles.filter(a => a.prominence === 'secondary').slice(0, 2);
-            const gridStories = articles.filter(a => a.prominence === 'grid');
-
-            return (
-                <div>
-                    <div className="grid grid-cols-12 gap-8 mb-12">
-                        <div className="col-span-12 lg:col-span-8">
-                            {mainFeature ? (
-                                <Article article={mainFeature} isMain={true} />
-                            ) : (
-                                <p className="text-gray-500 text-center p-8">No main feature story available</p>
-                            )}
-                        </div>
-                        <div className="col-span-12 lg:col-span-4 space-y-6">
-                            {secondaryFeatures.length > 0 ? (
-                                secondaryFeatures.map(article => (
-                                    <Article 
-                                        key={article.id} 
-                                        article={article} 
-                                        isSecondary={true} 
-                                    />
-                                ))
-                            ) : (
-                                <p className="text-gray-500 text-center p-4">No secondary stories available</p>
-                            )}
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {gridStories.length > 0 ? (
-                            gridStories.map(article => (
-                                <Article key={article.id} article={article} />
-                            ))
-                        ) : (
-                            <p className="text-gray-500 text-center p-4 col-span-3">No additional stories available</p>
-                        )}
-                    </div>
+      if (isExpanded) {
+        return (
+          <div className="article-expanded">
+            <div className="max-w-4xl mx-auto px-4 py-8 mobile-expanded">
+              <button
+                onClick={handleClick}
+                className="mb-4 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 touch-target"
+              >
+                ← Back
+              </button>
+              <article>
+                {article.imageUrl && (
+                  <img
+                    src={article.imageUrl}
+                    alt={article.title}
+                    className="w-full max-h-[500px] object-cover rounded-lg mb-6"
+                  />
+                )}
+                <h1 className="text-4xl font-serif mb-4">{article.title}</h1>
+                <div className="text-black mb-4">
+                  By {article.author || "Staff Reporter"} |{" "}
+                  {new Date(article.date).toLocaleDateString()}
                 </div>
-            );
+                <div
+                  className="prose max-w-none text-black"
+                  dangerouslySetInnerHTML={createMarkup(article.content)}
+                />
+              </article>
+            </div>
+          </div>
+        );
+      }
+
+      // Main headline article (hero)
+      if (size === 'hero') {
+        return (
+          <article className={`cursor-pointer article-transition mobile-hero ${window.innerWidth <= 768 ? 'mobile-hero' : ''}`} onClick={handleClick}>
+            {article.imageUrl && (
+              <img
+                src={article.imageUrl}
+                alt={article.title}
+                className="w-full h-80 md:h-80 object-cover mb-4"
+              />
+            )}
+            <div className="category-tag mb-2">{article.category}</div>
+            <h1 className="headline-main text-4xl md:text-4xl mb-4">{article.title}</h1>
+            <p className="text-lg leading-relaxed line-clamp-3 mb-4">{article.preview}</p>
+            <div className="byline">
+              By {article.author || "Staff Reporter"} | {article.readingTime || 5} min read
+            </div>
+          </article>
+        );
+      }
+
+      // Secondary headlines
+      if (size === 'secondary') {
+        return (
+          <article className="cursor-pointer article-transition mb-6 mobile-secondary" onClick={handleClick}>
+            {article.imageUrl && (
+              <img
+                src={article.imageUrl}
+                alt={article.title}
+                className="w-full h-48 md:h-48 object-cover mb-3"
+              />
+            )}
+            <div className="category-tag mb-2">{article.category}</div>
+            <h2 className="headline-secondary text-2xl md:text-2xl mb-3 line-clamp-2">{article.title}</h2>
+            <p className="text-base leading-relaxed line-clamp-3 mb-2">{article.preview}</p>
+            <div className="byline">
+              By {article.author || "Staff Reporter"} | {article.readingTime || 3} min read
+            </div>
+          </article>
+        );
+      }
+
+      // Sidebar stories
+      if (size === 'sidebar') {
+        return (
+          <article className="cursor-pointer article-transition mb-4 pb-4 border-b border-gray-200 mobile-sidebar" onClick={handleClick}>
+            <div className="category-tag mb-2">{article.category}</div>
+            <h3 className="headline-secondary text-lg mb-2 line-clamp-2">{article.title}</h3>
+            <p className="text-sm leading-relaxed line-clamp-2 mb-2">{article.preview}</p>
+            <div className="byline text-xs">
+              {article.readingTime || 2} min read
+            </div>
+          </article>
+        );
+      }
+
+      // Small stories (list format)
+      if (size === 'small') {
+        return (
+          <article className="cursor-pointer article-transition mb-3 mobile-small" onClick={handleClick}>
+            <div className="flex gap-3 w-full">
+              {article.imageUrl && (
+                <img
+                  src={article.imageUrl}
+                  alt={article.title}
+                  className="w-20 h-16 md:w-20 md:h-16 object-cover flex-shrink-0"
+                />
+              )}
+              <div className="flex-1">
+                <div className="category-tag mb-1">{article.category}</div>
+                <h4 className="headline-secondary text-base mb-1 line-clamp-2">{article.title}</h4>
+                <div className="byline text-xs">
+                  {article.readingTime || 2} min read
+                </div>
+              </div>
+            </div>
+          </article>
+        );
+      }
+
+      // Default medium stories
+      return (
+        <article className="cursor-pointer article-transition mb-6" onClick={handleClick}>
+          {article.imageUrl && (
+            <img
+              src={article.imageUrl}
+              alt={article.title}
+              className="w-full h-40 object-cover mb-3"
+            />
+          )}
+          <div className="category-tag mb-2">{article.category}</div>
+          <h3 className="headline-secondary text-xl mb-3 line-clamp-2">{article.title}</h3>
+          <p className="text-sm leading-relaxed line-clamp-3 mb-2">{article.preview}</p>
+          <div className="byline">
+            By {article.author || "Staff Reporter"} | {article.readingTime || 3} min read
+          </div>
+        </article>
+      );
+    };
+
+    const HeroSection = ({ config, articles }) => {
+      const leftArticles = config.leftColumn.articles.map(id => articles[id]).filter(Boolean);
+      const mainArticle = articles[config.mainFeature.article];
+      const rightArticles = config.rightColumn.articles.map(id => articles[id]).filter(Boolean);
+
+      return (
+        <div className="grid grid-cols-12 gap-6 mb-8">
+          {/* Mobile: Stack everything vertically */}
+          <div className="col-span-12 lg:col-span-2 newspaper-border md:block">
+            <h2 className="text-lg font-bold mb-4 pb-2 border-b desktop-only">Latest News</h2>
+            <div className="md:block">
+              {leftArticles.length > 0 ? (
+                leftArticles.map(article => (
+                  <Article key={article.id} article={article} size="sidebar" />
+                ))
+              ) : (
+                <p className="text-gray-500 text-sm desktop-only">No sidebar stories</p>
+              )}
+            </div>
+          </div>
+
+          {/* Main Feature */}
+          <div className="col-span-12 lg:col-span-7 newspaper-border">
+            {mainArticle ? (
+              <Article article={mainArticle} size="hero" />
+            ) : (
+              <p className="text-gray-500 text-center p-8">No main feature story available</p>
+            )}
+          </div>
+
+          {/* Right Column */}
+          <div className="col-span-12 lg:col-span-3">
+            <h2 className="text-lg font-bold mb-4 pb-2 border-b desktop-only">More Stories</h2>
+            {rightArticles.length > 0 ? (
+              rightArticles.map(article => (
+                <Article key={article.id} article={article} size="small" />
+              ))
+            ) : (
+              <p className="text-gray-500 text-sm desktop-only">No additional stories</p>
+            )}
+          </div>
+        </div>
+      );
+    };
+
+    const MainFeatureSection = ({ config, articles }) => {
+      const article = articles[config.article];
+      
+      return (
+        <div className="mb-8">
+          <div className="border-t-2 border-black pt-6">
+            {article ? (
+              <Article article={article} size="hero" />
+            ) : (
+              <p className="text-gray-500 text-center p-8">No feature story available</p>
+            )}
+          </div>
+        </div>
+      );
+    };
+
+    const GridSection = ({ config, articles }) => {
+      const gridArticles = config.articles.map(id => articles[id]).filter(Boolean);
+      const columns = config.columns || 3;
+      
+      const colsClass = {
+        2: "grid-cols-1 md:grid-cols-2",
+        3: "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
+        4: "grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+      };
+
+      return (
+        <div className="mb-8">
+          <div className="border-t border-gray-300 pt-6">
+            <div className={`grid ${colsClass[columns] || colsClass[3]} gap-6`}>
+              {gridArticles.length > 0 ? (
+                gridArticles.map((article, index) => (
+                  <div key={article.id} className={index < gridArticles.length - 1 ? "newspaper-border" : ""}>
+                    <Article article={article} size="secondary" />
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500 text-center p-4 col-span-full">No grid stories available</p>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    const TwoColumnSection = ({ config, articles }) => {
+      const columnArticles = config.articles.map(id => articles[id]).filter(Boolean);
+
+      return (
+        <div className="mb-8">
+          <div className="border-t border-gray-300 pt-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {columnArticles.length > 0 ? (
+                columnArticles.map((article, index) => (
+                  <div key={article.id} className={index === 0 ? "newspaper-border" : ""}>
+                    <Article article={article} size="secondary" />
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500 text-center p-4 col-span-2">No two-column stories available</p>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    const ListViewSection = ({ config, articles }) => {
+      const listArticles = config.articles.map(id => articles[id]).filter(Boolean);
+
+      return (
+        <div className="mb-8">
+          <div className="border-t border-gray-300 pt-6">
+            <h2 className="text-xl font-bold mb-6 pb-2 border-b">Brief Updates</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {listArticles.length > 0 ? (
+                listArticles.map((article, index) => (
+                  <div key={article.id} className={index < listArticles.length - 1 ? "newspaper-border" : ""}>
+                    <Article article={article} size="small" />
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500 text-center p-4 col-span-3">No brief stories available</p>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    const HomePage = () => {
+      const [data, setData] = React.useState({ layout: [], articles: {} });
+
+      React.useEffect(() => {
+        // Mock data for demonstration since articles.json might not exist
+        const mockData = {
+          layout: [
+            {
+              id: "hero-section",
+              type: "hero",
+              config: {
+                leftColumn: { articles: ["1", "2"] },
+                mainFeature: { article: "main" },
+                rightColumn: { articles: ["3", "4", "5"] }
+              }
+            },
+            {
+              id: "grid-section",
+              type: "grid",
+              config: {
+                articles: ["6", "7", "8"],
+                columns: 3
+              }
+            }
+          ],
+          articles: {
+            "main": {
+              id: "main",
+              title: "Breaking: Major Economic Policy Changes Announced",
+              preview: "In a sweeping announcement today, federal officials outlined significant changes to economic policy that could affect millions of Americans. The comprehensive plan includes measures for inflation control, employment initiatives, and small business support programs.",
+              category: "POLITICS",
+              author: "Sarah Johnson",
+              readingTime: "5",
+              imageUrl: "https://images.unsplash.com/photo-1586339949916-3e9457bef6d3?w=800&h=400&fit=crop",
+              content: "<p>This is the full article content...</p>"
+            },
+            "1": {
+              id: "1",
+              title: "Global Markets React to Policy Changes",
+              preview: "International markets showed mixed reactions to the latest policy announcements from Washington.",
+              category: "ECONOMY",
+              readingTime: "3",
+              content: "<p>Article content here...</p>"
+            },
+            "2": {
+              id: "2",
+              title: "Tech Sector Outlook Remains Strong",
+              preview: "Despite economic uncertainties, technology companies continue to show resilience.",
+              category: "TECH",
+              readingTime: "4",
+              content: "<p>Article content here...</p>"
+            },
+            "3": {
+              id: "3",
+              title: "Climate Summit Reaches Key Agreement",
+              preview: "World leaders agree on new framework for carbon emissions reduction.",
+              category: "WORLD",
+              readingTime: "6",
+              imageUrl: "https://images.unsplash.com/photo-1569163139394-de4e5f43e4e3?w=400&h=300&fit=crop",
+              content: "<p>Article content here...</p>"
+            },
+            "4": {
+              id: "4",
+              title: "Healthcare Innovation Shows Promise",
+              preview: "New treatments offering hope for patients with chronic conditions.",
+              category: "HEALTH",
+              readingTime: "4",
+              imageUrl: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=400&h=300&fit=crop",
+              content: "<p>Article content here...</p>"
+            },
+            "5": {
+              id: "5",
+              title: "Education Reform Debate Continues",
+              preview: "Stakeholders weigh in on proposed changes to curriculum standards.",
+              category: "EDUCATION",
+              readingTime: "3",
+              content: "<p>Article content here...</p>"
+            },
+            "6": {
+              id: "6",
+              title: "Sports: Championship Finals Begin",
+              preview: "Teams prepare for what promises to be an exciting championship series.",
+              category: "SPORTS",
+              readingTime: "2",
+              imageUrl: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=400&h=300&fit=crop",
+              content: "<p>Article content here...</p>"
+            },
+            "7": {
+              id: "7",
+              title: "Cultural Events Return to City Centers",
+              preview: "Museums and theaters announce expanded programming for the new season.",
+              category: "CULTURE",
+              readingTime: "3",
+              imageUrl: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=300&fit=crop",
+              content: "<p>Article content here...</p>"
+            },
+            "8": {
+              id: "8",
+              title: "Local Business Recovery Continues",
+              preview: "Small businesses report steady improvement in customer traffic and sales.",
+              category: "BUSINESS",
+              readingTime: "4",
+              imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop",
+              content: "<p>Article content here...</p>"
+            }
+          }
         };
 
-        // Render the app
-        ReactDOM.render(
-            <HomePage />,
-            document.getElementById('root')
-        );
-    </script>
+        // Try to fetch real data, fall back to mock data
+        fetch('./articles.json')
+          .then(res => res.json())
+          .then(data => setData(data))
+          .catch(err => {
+            console.log('Using mock data for demonstration');
+            setData(mockData);
+          });
+      }, []);
+
+      const renderSection = (section) => {
+        switch (section.type) {
+          case 'hero':
+            return <HeroSection key={section.id} config={section.config} articles={data.articles} />;
+          case 'main-feature':
+            return <MainFeatureSection key={section.id} config={section.config} articles={data.articles} />;
+          case 'grid':
+            return <GridSection key={section.id} config={section.config} articles={data.articles} />;
+          case 'two-column':
+            return <TwoColumnSection key={section.id} config={section.config} articles={data.articles} />;
+          case 'list-view':
+            return <ListViewSection key={section.id} config={section.config} articles={data.articles} />;
+          default:
+            return null;
+        }
+      };
+
+      return (
+        <div>
+          {data.layout.map(section => renderSection(section))}
+        </div>
+      );
+    };
+
+    ReactDOM.render(<HomePage />, document.getElementById('root'));
+  </script>
 </body>
 </html>
